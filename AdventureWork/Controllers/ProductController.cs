@@ -19,10 +19,10 @@ namespace AdventureWork.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
-        public IActionResult GetProduct()
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Product>))]
+        public async Task<IActionResult> GetProducts()
         {
-            var products = productRepo.GetProducts();
+            var products = await productRepo.GetProducts();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

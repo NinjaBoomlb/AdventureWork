@@ -4,6 +4,6 @@ namespace AdventureWork.Interface
 {
     public interface IProductRepo
     {
-        ICollection<Product> GetProducts();
+        public Task<ICollection<Product>> GetProducts();
     }
 }
