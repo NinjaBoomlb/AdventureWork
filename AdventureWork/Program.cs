@@ -1,12 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using AdventureWork.Data;
-using AdventureWork;
+using AdventureWork.Interface;
+using AdventureWork.Repo;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IProductRepo, ProductRepo>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

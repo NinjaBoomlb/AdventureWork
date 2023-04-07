@@ -17,11 +17,14 @@ namespace AdventureWork.Data
         public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
         public DbSet<ProductProductPhoto> ProductProductPhoto { get; set; }
 
-        //   protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //  {
-        //      modelBuilder.Entity<ProductProductPhoto>().HasKey(p => new { p.ProductID, p.ProductPhotoID });
-        //     modelBuilder.Entity<ProductProductPhoto>()
-        //          .HasOne(pc => pc.ProductID)
-        // }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ProductInventory>()
+                .HasKey(p => new { p.ProductID, p.LocationID });
+
+            modelBuilder.Entity<ProductProductPhoto>()
+                .HasKey(p => new { p.ProductID, p.ProductPhotoID });
+
+        }
     }
 }
