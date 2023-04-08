@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AdventureWork.Interface;
 using AdventureWork.Models;
-using AdventureWork.Data;
 
 namespace AdventureWork.Controllers
 {
@@ -10,16 +9,14 @@ namespace AdventureWork.Controllers
     public class ProductController : Controller
     {
         private readonly IProductRepo productRepo;
-        private readonly DataContext context;
 
-        public ProductController(IProductRepo productRepo, DataContext context)
+        public ProductController(IProductRepo productRepo)
         {
             this.productRepo = productRepo;
-            this.context = context;
         }
 
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<Product>))]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
         public async Task<IActionResult> GetProducts()
         {
             var products = await productRepo.GetProducts();
@@ -28,6 +25,59 @@ namespace AdventureWork.Controllers
                 return BadRequest(ModelState);
 
             return Ok(products);
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(200, Type = typeof(Product))]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> GetProdcut(int id)
+        {
+            var exists = await productRepo.ProductExists(id);
+            
+            
+            if(!exists)
+                return StatusCode(400, "Not Found");
+
+            if (!ModelState.IsValid)
+                return StatusCode(400, "No product");
+            var product = await productRepo.GetProduct(id);
+            return Ok(product);
+
+        }
+
+        [HttpPost("Insert Product")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+
+        public async Task<IActionResult> CreateProduct([FromBody] Product product) { 
+        
+            var exists = await productRepo.ProductExists(product.ProductID);
+
+            if (exists)
+                return BadRequest("Already in the table");
+
+            var added = await productRepo.CreateProduct(product);
+
+            if (!added)
+                return StatusCode(400, "Something went wrong");
+
+            return Ok(added);
+
+        }
+        [HttpDelete("Delete Product {id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteProduct( int id)
+        {
+            var exists = await productRepo.ProductExists(id);
+
+            if (!exists)
+                return BadRequest("Not found");
+
+            var product = await productRepo.GetProduct(id);
+            var deleted = await productRepo.DeleteProduct(product);
+
+            return Ok(deleted);
         }
     }
 }
