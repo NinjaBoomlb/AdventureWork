@@ -10,18 +10,20 @@ namespace AdventureWork.Controllers
     public class ProductCategoryController : Controller
     {
         private readonly IProductCategoryRepo productCategoryRepo;
+        private readonly IProductRepo productRepo;
 
-        public ProductCategoryController(IProductCategoryRepo productCategoryRepo)
+        public ProductCategoryController(IProductCategoryRepo productCategoryRepo, IProductRepo productRepo)
         {
                 this.productCategoryRepo = productCategoryRepo;
+                this.productRepo = productRepo;
         }
 
 
-        [HttpGet]
+        [HttpGet("Get Specific products {idCategory}")]
         [ProducesResponseType(200, Type = typeof(IEnumerable<ProductCategory>))]
-        public async Task<IActionResult> GetCategories()
+        public async Task<IActionResult> GetCategories(int idCategory)
         {
-            var categories = await productCategoryRepo.GetCategories();
+            var categories = await productCategoryRepo.GetCategories(idCategory);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

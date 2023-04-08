@@ -1,5 +1,8 @@
-﻿namespace AdventureWork.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AdventureWork.Models
 {
+    [Table("ProductInventory", Schema = "Production")]
     public class ProductInventory
     {
         public int ProductID { get; set; }

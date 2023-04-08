@@ -30,9 +30,10 @@ namespace AdventureWork.Repo
             throw new NotImplementedException();
         }
 
-        public async Task<ICollection<ProductCategory>> GetCategories()
+        public async Task<ICollection<Product>> GetCategories(int idCategory)
         {
-            return await _dataContext.ProductCategories.OrderBy(p => p.ProductCategoryID).ToListAsync();
+            var subcategoryIds = await _dataContext.ProductSubcategories.Where(p => p.ProductCategoryID == idCategory).Select(p => p.ProductSubcategoryID).ToListAsync();
+            return await _dataContext.Product.Where(p => _dataContext.ProductSubcategories.Any(s => s.ProductSubcategoryID == p.ProductSubcategoryID && subcategoryIds.Contains(s.ProductSubcategoryID))).ToListAsync();
         }
 
         public async Task<ProductCategory> GetCategory(int id)
@@ -44,5 +45,6 @@ namespace AdventureWork.Repo
         {
             throw new NotImplementedException();
         }
+
     }
 }

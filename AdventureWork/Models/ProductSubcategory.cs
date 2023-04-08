@@ -1,5 +1,8 @@
-﻿namespace AdventureWork.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AdventureWork.Models
 {
+    [Table("ProductSubcategory", Schema = "Production")]
     public class ProductSubcategory
     {
     public int ProductSubcategoryID {  get; set; }
