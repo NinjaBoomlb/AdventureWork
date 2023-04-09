@@ -6,6 +6,6 @@ namespace AdventureWork.Interface
     {
         public Task<byte[]> GetThumbNail(int productId);
         public Task<byte[]> GetLargePhoto(int productId);
-        public Task<ICollection<ProductPhoto>> GetAllPhotos(int productId);
+        public Task<ICollection<ProductPhoto>> GetAllPhotos();
     }
 }

@@ -33,11 +33,10 @@ namespace AdventureWork.Repo
             return photos;
         }
 
-        public async Task<ICollection<ProductPhoto>> GetAllPhotos(int productId)
+        public async Task<ICollection<ProductPhoto>> GetAllPhotos()
         {
-            var productphotomany = await _dataContext.ProductProductPhoto.Where(pc => pc.ProductID == productId).Select(p => p.ProductPhotoID).ToListAsync();
-
-            var photos = await _dataContext.ProductPhoto.Where(pc => productphotomany.Contains(pc.ProductPhotoID)).ToListAsync();
+            
+            var photos = await _dataContext.ProductPhoto.OrderBy(p=> p.ProductPhotoID).ToListAsync();
 
             return photos;
         }

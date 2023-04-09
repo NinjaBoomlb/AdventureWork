@@ -53,16 +53,13 @@ namespace AdventureWork.Controllers
         }
 
 
-        [HttpGet("Get {id} All Photos")]
+        [HttpGet("Get All Photos")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> GetAllPhotos(int id)
+        public async Task<IActionResult> GetAllPhotos()
         {
-            var exists = await productRepo.ProductExists(id);
-            if (!exists)
-                return StatusCode(400, "Not Found");
 
-            var photos = await productPhotoRepo.GetAllPhotos(id);
+            var photos = await productPhotoRepo.GetAllPhotos();
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
