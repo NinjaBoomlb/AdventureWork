@@ -18,17 +18,81 @@ namespace AdventureWork.Controllers
                 this.productRepo = productRepo;
         }
 
-
-        [HttpGet("Get Specific products {idCategory}")]
-        [ProducesResponseType(200, Type = typeof(IEnumerable<ProductCategory>))]
-        public async Task<IActionResult> GetCategories(int idCategory)
+        [HttpPost]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> InsertCategory([FromBody] ProductCategory category)
         {
-            var categories = await productCategoryRepo.GetCategories(idCategory);
+            var exists = await productCategoryRepo.CategoryExists(category.ProductCategoryID);
+
+            if (exists)
+                return BadRequest("Already in the table");
+
+            var added = await productCategoryRepo.CreateCategory(category);
+
+            if (!added)
+                return StatusCode(400, "Something went wrong");
+
+            return Ok(added);
+        }
+
+        [HttpPut("Update Category")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+
+        public async Task<IActionResult> UpdateCategory([FromBody] ProductCategory category)
+        {
+
+            if (category == null)
+                return BadRequest("Your data is null");
+
+
+            var exists = await productCategoryRepo.CategoryExists(category.ProductCategoryID);
+
+            if (!exists)
+                return BadRequest("Not found ");
+
+            var updated = await productCategoryRepo.UpdateCategory(category);
+
+            if (!updated)
+                return StatusCode(400, "Something went wrong");
+
+            return Ok(updated);
+
+        }
+
+
+        [HttpDelete("Delete Category {id}")]
+        [ProducesResponseType(200, Type = typeof(bool))]
+        [ProducesResponseType(400)]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+            var exists = await productCategoryRepo.CategoryExists(id);
+
+            if (!exists)
+                return BadRequest("Not found");
+
+            var category = await productCategoryRepo.GetCategory(id);
+            var deleted = await productCategoryRepo.DeleteCategory(category);
+
+            return Ok(deleted);
+        }
+
+
+
+        [HttpGet("Get Specific products {id}")]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
+        public async Task<IActionResult> GetCategories(int id)
+        {
+            var categories = await productCategoryRepo.GetCategories(id);
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             return Ok(categories);
         }
+
+
+
     }
 }

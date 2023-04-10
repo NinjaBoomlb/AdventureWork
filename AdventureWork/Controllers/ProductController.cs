@@ -27,7 +27,7 @@ namespace AdventureWork.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
+/*        [HttpGet("{id}")]
         [ProducesResponseType(200, Type = typeof(Product))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetProdcut(int id)
@@ -43,7 +43,7 @@ namespace AdventureWork.Controllers
             var product = await productRepo.GetProduct(id);
             return Ok(product);
 
-        }
+        }*/
 
         [HttpPost("Insert Product")]
         [ProducesResponseType(200)]
@@ -82,7 +82,7 @@ namespace AdventureWork.Controllers
 
 
         [HttpPut("Update Product {id}")]
-        [ProducesResponseType(200, Type = typeof(Product))]
+        [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
 
         public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)

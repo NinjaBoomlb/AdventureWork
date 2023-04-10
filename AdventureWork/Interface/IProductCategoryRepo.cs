@@ -5,7 +5,7 @@ namespace AdventureWork.Interface
     public interface IProductCategoryRepo
     {
         public Task<ICollection<Product>> GetCategories(int idCategory);
-        public Task<ProductCategory> GetCategory(int id);
+        public Task<ProductCategory> GetCategory(int idCategory);
         public Task<bool> CategoryExists(int id);
         public Task<bool> CreateCategory(ProductCategory category);
         public Task<bool> UpdateCategory(ProductCategory category);
