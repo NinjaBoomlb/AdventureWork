@@ -36,9 +36,17 @@ namespace AdventureWork.Repo
             return await _dataContext.SaveChangesAsync() > 0;
         }
 
-        Task<bool> IProductRepo.UpdateProduct(Product product)
+        public async Task<bool> UpdateProduct(Product product)
         {
-            throw new NotImplementedException();
+
+            var existingProduct = await this.GetProduct(product.ProductID);
+
+            if (existingProduct != null)
+            {
+                _dataContext.Entry(existingProduct).State = EntityState.Detached;
+            }
+            _dataContext.Update(product);
+            return await _dataContext.SaveChangesAsync() > 0;
         }
 
         async Task<bool> IProductRepo.DeleteProduct(Product product)

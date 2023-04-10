@@ -65,7 +65,7 @@ namespace AdventureWork.Controllers
 
         }
         [HttpDelete("Delete Product {id}")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> DeleteProduct( int id)
         {
@@ -79,5 +79,34 @@ namespace AdventureWork.Controllers
 
             return Ok(deleted);
         }
+
+
+        [HttpPut("Update Product {id}")]
+        [ProducesResponseType(200, Type = typeof(Product))]
+        [ProducesResponseType(400)]
+
+        public async Task<IActionResult> UpdateProduct(int id, [FromBody] Product product)
+        {
+
+            if (product == null)
+                return BadRequest("Your data is null");
+
+            if (product.ProductID != id)
+                return BadRequest("Not Compatible");
+
+            var exists = await productRepo.ProductExists(product.ProductID);
+
+            if (!exists)
+                return BadRequest("Not found ");
+
+            var updated = await productRepo.UpdateProduct(product);
+
+            if (!updated)
+                return StatusCode(400, "Something went wrong");
+
+            return Ok(updated);
+
+        }
+
     }
 }
