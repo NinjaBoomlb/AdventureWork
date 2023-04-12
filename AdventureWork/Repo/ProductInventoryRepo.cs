@@ -50,5 +50,26 @@ namespace AdventureWork.Repo
             _dataContext.Update(inventory);
             return await _dataContext.SaveChangesAsync() > 0;
         }
+
+        public async Task<ICollection<Product>> GetProdcutsInShelf(string shelf)
+        {
+            var idsinshelf = _dataContext.ProductInventories.Where(p => p.Shelf.Equals(shelf)).Select(pc => pc.ProductID).ToList();
+            var products = _dataContext.Product.Where(p => idsinshelf.Contains(p.ProductID)).ToList();
+
+            return products;
+        }
+
+        public async Task<bool> CheckShelf(string shelf)
+        {
+            var shelfvar =  await _dataContext.ProductInventories.Where(p => p.Shelf == shelf).FirstOrDefaultAsync();
+            return shelfvar != null;
+        }
+
+        public async Task<Int16> GetAllProductsQuantities()
+        {
+            var quantity = _dataContext.ProductInventories.Sum(p => p.Quantity);
+
+            return (short)quantity;
+        }
     }
 }
