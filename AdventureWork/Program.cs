@@ -11,6 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IProductRepo, ProductRepo>();
 builder.Services.AddScoped<IProductCategoryRepo, ProductCategoryRepo>();
 builder.Services.AddScoped<IProductPhotoRepo, ProductPhotoRepo>();
+builder.Services.AddScoped<IProductInventoryRepo, ProductInventoryRepo>();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

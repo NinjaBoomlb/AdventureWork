@@ -17,6 +17,8 @@ namespace AdventureWork.Data
         public DbSet<ProductSubcategory> ProductSubcategories { get; set; }
         public DbSet<ProductProductPhoto> ProductProductPhoto { get; set; }
 
+        public DbSet<Location> Location { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductInventory>()
