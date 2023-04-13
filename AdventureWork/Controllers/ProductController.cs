@@ -32,19 +32,16 @@ namespace AdventureWork.Controllers
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
 
-        public async Task<IActionResult> CreateProduct([FromBody] Product product) {
-
+        public async Task<IActionResult> CreateProduct([FromBody] Product product)
+        {
             if (product.ProductID != null)
                 return BadRequest("Product Id should be null");
-
 
             if (product.SafetyStockLevel <= 0)
                 return BadRequest("Safety stock should be greater than 0");
 
-
             if (product.ReorderPoint <= 0)
                 return BadRequest("Reorder point should be greater than 0");
-
 
             if (product.StandardCost <= 0)
                 return BadRequest("Standard cost should be greater than 0");
@@ -52,7 +49,7 @@ namespace AdventureWork.Controllers
             if (product.ListPrice <= 0)
                 return BadRequest("List price should be greater than 0");
 
-            if (product.Weight <= 0)
+            if (product.Weight != null && product.Weight <= 0)
                 return BadRequest("Weight should be greater than 0");
 
             if (product.DaysToManufacture <= 0)
@@ -70,10 +67,8 @@ namespace AdventureWork.Controllers
                   product.Class == "H" || product.Class == "M" || product.Class == "L"))
                 return BadRequest("Invalid class");
 
-
-            if (product.SellStartDate >= product.SellEndDate)
+            if (product.SellStartDate >= product.SellEndDate && product.SellEndDate != null)
                 return BadRequest("Sell end date should be greater than sell start date");
-
 
             var added = await productRepo.CreateProduct(product);
 
@@ -81,8 +76,8 @@ namespace AdventureWork.Controllers
                 return StatusCode(400, "Something went wrong");
 
             return Ok(added);
-
         }
+
         [HttpDelete("Delete Product {id}")]
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
@@ -110,6 +105,9 @@ namespace AdventureWork.Controllers
             if (product == null)
                 return BadRequest("Your data is null");
 
+            if (product.ProductID == null)
+                return BadRequest("Product Id should not be null");
+
             var exists = await productRepo.ProductExists(product.ProductID);
 
             if (!exists)
@@ -118,10 +116,8 @@ namespace AdventureWork.Controllers
             if (product.SafetyStockLevel <= 0)
                 return BadRequest("Safety stock should be greater than 0");
 
-
             if (product.ReorderPoint <= 0)
                 return BadRequest("Reorder point should be greater than 0");
-
 
             if (product.StandardCost <= 0)
                 return BadRequest("Standard cost should be greater than 0");
@@ -129,7 +125,7 @@ namespace AdventureWork.Controllers
             if (product.ListPrice <= 0)
                 return BadRequest("List price should be greater than 0");
 
-            if (product.Weight <= 0)
+            if (product.Weight != null && product.Weight <= 0)
                 return BadRequest("Weight should be greater than 0");
 
             if (product.DaysToManufacture <= 0)
@@ -147,8 +143,7 @@ namespace AdventureWork.Controllers
                   product.Class == "H" || product.Class == "M" || product.Class == "L"))
                 return BadRequest("Invalid class");
 
-
-            if (product.SellStartDate >= product.SellEndDate)
+            if (product.SellStartDate >= product.SellEndDate && product.SellEndDate != null)
                 return BadRequest("Sell end date should be greater than sell start date");
 
             var updated = await productRepo.UpdateProduct(product);

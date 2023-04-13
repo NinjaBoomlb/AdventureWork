@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using AdventureWork.Interface;
 using AdventureWork.Models;
-
-
+using System.Text.RegularExpressions;
 
 namespace AdventureWork.Controllers
 {
@@ -51,16 +50,25 @@ namespace AdventureWork.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> InsertInventory([FromBody] ProductInventory inventory)
         {
+
+            if (inventory == null)
+                return BadRequest("Your data is null");
+
+            if (!(inventory.Bin >= 0 && inventory.Bin <= 100))
+                return BadRequest("Bin should be between 0 and 100");
+
+            if (!(Regex.IsMatch(inventory.Shelf, "^[A-Za-z]$") || inventory.Shelf.ToUpper() == "N/A"))
+                return BadRequest("Invalid shelf");
+
             var exists = await inventoryRepo.CheckLocation(inventory.LocationID);
             if (!exists)
                 return NotFound("Location not found");
             exists = await productRepo.ProductExists(inventory.ProductID);
             if (!exists)
-                return NotFound("Product Not Found");
-             exists = await inventoryRepo.InventoryExists(inventory.ProductID, inventory.LocationID);
+                return NotFound("Product not found");
+            exists = await inventoryRepo.InventoryExists(inventory.ProductID, inventory.LocationID);
             if (!exists)
-                return NotFound("Inventory Already in table");
-
+                return NotFound("Inventory already in table");
 
             var added = await inventoryRepo.CreateInventory(inventory);
             if (!ModelState.IsValid)
@@ -73,6 +81,7 @@ namespace AdventureWork.Controllers
         }
 
 
+
         [HttpPut("Update Inventory")]
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
@@ -83,6 +92,13 @@ namespace AdventureWork.Controllers
             if (inventory == null)
                 return BadRequest("Your data is null");
             var exists = await inventoryRepo.CheckLocation(inventory.LocationID);
+
+            if (!(inventory.Bin >= 0 && inventory.Bin <= 100))
+                return BadRequest("Bin should be between 0 and 100");
+
+            if (!(Regex.IsMatch(inventory.Shelf, "^[A-Za-z]$") || inventory.Shelf.ToUpper() == "N/A"))
+                return BadRequest("Invalid shelf");
+
             if (!exists)
                 return NotFound("Location not found");
             exists = await productRepo.ProductExists(inventory.ProductID);
@@ -108,6 +124,8 @@ namespace AdventureWork.Controllers
 
         public async Task<IActionResult> GetProductsInShelf(string shelf)
         {
+            if (!(Regex.IsMatch(shelf, "^[A-Za-z]$") || shelf.ToUpper() == "N/A"))
+                return BadRequest("Invalid shelf");
 
             var exists = await inventoryRepo.CheckShelf(shelf);
             if (!exists)
