@@ -34,6 +34,10 @@ namespace AdventureWork.Controllers
 
         public async Task<IActionResult> CreateProduct([FromBody] Product product)
         {
+
+            if (product == null)
+                return BadRequest("Your data is null");
+
             if (product.ProductID != null)
                 return BadRequest("Product Id should be null");
 
@@ -69,7 +73,10 @@ namespace AdventureWork.Controllers
 
             if (product.SellStartDate >= product.SellEndDate && product.SellEndDate != null)
                 return BadRequest("Sell end date should be greater than sell start date");
+            if (product.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
 
+            product.ModifiedDate = DateTime.Now;
             var added = await productRepo.CreateProduct(product);
 
             if (!added)
@@ -145,7 +152,10 @@ namespace AdventureWork.Controllers
 
             if (product.SellStartDate >= product.SellEndDate && product.SellEndDate != null)
                 return BadRequest("Sell end date should be greater than sell start date");
+            if (product.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
 
+            product.ModifiedDate = DateTime.Now;
             var updated = await productRepo.UpdateProduct(product);
 
             if (!updated)

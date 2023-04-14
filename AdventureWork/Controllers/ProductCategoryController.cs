@@ -23,11 +23,18 @@ namespace AdventureWork.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> InsertCategory([FromBody] ProductCategory category)
         {
+
+            if (category == null)
+                return BadRequest("Your data is null");
+
             var exists = await productCategoryRepo.CategoryExists(category.ProductCategoryID);
 
             if (exists)
                 return BadRequest("Already in the table");
+            if (category.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
 
+            category.ModifiedDate = DateTime.Now;
             var added = await productCategoryRepo.CreateCategory(category);
 
             if (!added)
@@ -51,7 +58,10 @@ namespace AdventureWork.Controllers
 
             if (!exists)
                 return BadRequest("Not found ");
+            if (category.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
 
+            category.ModifiedDate = DateTime.Now;
             var updated = await productCategoryRepo.UpdateCategory(category);
 
             if (!updated)

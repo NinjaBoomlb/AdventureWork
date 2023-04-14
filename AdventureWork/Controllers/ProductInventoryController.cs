@@ -48,7 +48,7 @@ namespace AdventureWork.Controllers
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> InsertInventory([FromBody] ProductInventory inventory)
+        public async Task<IActionResult> InsertInventory([FromQuery] ProductInventory inventory)
         {
 
             if (inventory == null)
@@ -69,7 +69,10 @@ namespace AdventureWork.Controllers
             exists = await inventoryRepo.InventoryExists(inventory.ProductID, inventory.LocationID);
             if (!exists)
                 return NotFound("Inventory already in table");
+            if (inventory.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
 
+            inventory.ModifiedDate = DateTime.Now;
             var added = await inventoryRepo.CreateInventory(inventory);
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -109,6 +112,10 @@ namespace AdventureWork.Controllers
             if (!exists)
                 return BadRequest("Inventory Not Found ");
 
+            if (inventory.ModifiedDate != null)
+                return BadRequest("The modified date should be null (will be added automatically)");
+
+            inventory.ModifiedDate = DateTime.Now;
             var updated = await inventoryRepo.UpdateInventory(inventory);
 
             if (!updated)
