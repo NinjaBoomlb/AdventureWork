@@ -21,7 +21,7 @@ namespace AdventureWork.Controllers
         [HttpPost]
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> InsertCategory([FromBody] ProductCategory category)
+        public async Task<IActionResult> InsertCategory([FromQuery] ProductCategory category)
         {
 
             if (category == null)
@@ -47,7 +47,7 @@ namespace AdventureWork.Controllers
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
 
-        public async Task<IActionResult> UpdateCategory([FromBody] ProductCategory category)
+        public async Task<IActionResult> UpdateCategory([FromQuery] ProductCategory category)
         {
 
             if (category == null)
@@ -84,7 +84,8 @@ namespace AdventureWork.Controllers
 
             var category = await productCategoryRepo.GetCategory(id);
             var deleted = await productCategoryRepo.DeleteCategory(category);
-
+            if(!deleted)
+                return BadRequest("Something went wrong or category id is used as a foreign key in another table");
             return Ok(deleted);
         }
 

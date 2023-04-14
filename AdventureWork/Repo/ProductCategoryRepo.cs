@@ -29,6 +29,11 @@ namespace AdventureWork.Repo
 
         public async Task<bool> DeleteCategory(ProductCategory category)
         {
+            var categoryExists = _dataContext.ProductSubcategories.Select(p => p.ProductCategoryID).ToList();
+
+            if(categoryExists.Contains(category.ProductCategoryID))
+                return false;
+
             _dataContext.Remove(category);
             return await _dataContext.SaveChangesAsync() > 0;
         }
@@ -56,5 +61,6 @@ namespace AdventureWork.Repo
         {
             return await _dataContext.ProductCategories.Where(p => p.ProductCategoryID == idCategory).FirstOrDefaultAsync();
         }
+
     }
 }

@@ -5,6 +5,8 @@ using System.Text.RegularExpressions;
 
 namespace AdventureWork.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class ProductInventoryController : Controller
     {
 
@@ -89,7 +91,7 @@ namespace AdventureWork.Controllers
         [ProducesResponseType(200, Type = typeof(bool))]
         [ProducesResponseType(400)]
 
-        public async Task<IActionResult> UpdateInventory([FromBody] ProductInventory inventory)
+        public async Task<IActionResult> UpdateInventory([FromQuery] ProductInventory inventory)
         {
 
             if (inventory == null)

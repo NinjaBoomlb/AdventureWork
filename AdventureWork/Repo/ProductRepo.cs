@@ -51,8 +51,34 @@ namespace AdventureWork.Repo
 
         async Task<bool> IProductRepo.DeleteProduct(Product product)
         {
+            var productExists = _dataContext.ProductInventories.Select(p => p.ProductID).ToList();
+
+            if (productExists.Contains(product.ProductID))
+                return false;
             _dataContext.Remove(product);
             return await _dataContext.SaveChangesAsync() > 0;
         }
+
+        public bool NameExists(string name)
+        {
+            var names =  _dataContext.Product.Select(p => p.Name).ToList();
+
+            return names.Contains(name);
+        }
+
+        public bool RowguidExists(Guid guid)
+        {
+            var guids =  _dataContext.Product.Select(p => p.rowguid).ToList();
+
+            return guids.Contains(guid);
+        }
+
+        public bool NumberExists(string number)
+        {
+            var numbers =  _dataContext.Product.Select(p => p.ProductNumber).ToList();
+
+            return numbers.Contains(number);
+        }
+
     }
 }

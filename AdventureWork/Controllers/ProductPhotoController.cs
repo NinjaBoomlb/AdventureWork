@@ -19,7 +19,7 @@ namespace AdventureWork.Controllers
         }
 
         [HttpGet("Get {id} Thumbnail")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(Byte[]))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetThumbNail(int id)
         {
@@ -36,7 +36,7 @@ namespace AdventureWork.Controllers
         }
 
         [HttpGet("Get {id} LargePhoto")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(Byte[]))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetLargePhoto(int id)
         {
@@ -54,7 +54,7 @@ namespace AdventureWork.Controllers
 
 
         [HttpGet("Get All Photos")]
-        [ProducesResponseType(200)]
+        [ProducesResponseType(200, Type = typeof(IEnumerable<Byte[]>))]
         [ProducesResponseType(400)]
         public async Task<IActionResult> GetAllPhotos()
         {

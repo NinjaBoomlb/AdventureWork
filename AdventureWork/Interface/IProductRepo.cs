@@ -10,5 +10,8 @@ namespace AdventureWork.Interface
         public Task<bool> CreateProduct(Product product);
         public Task<bool> UpdateProduct(Product product);
         public Task<bool> DeleteProduct(Product product);
+        public bool NameExists(string name);
+        public bool RowguidExists(Guid guid);
+        public bool NumberExists(string number);
     }
 }
